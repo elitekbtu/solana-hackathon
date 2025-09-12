@@ -17,18 +17,12 @@ services:
       dockerfile: dockerfiles/backend.Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - .:/backend
-    working_dir: /backend
   frontend:
     build:
       context: .
       dockerfile: dockerfiles/frontend.Dockerfile
     ports:
       - "80:80"
-    volumes:
-      - .:/frontend
-    working_dir: /frontend
 
 volumes:
   solana-docker:
