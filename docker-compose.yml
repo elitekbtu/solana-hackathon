@@ -1,0 +1,35 @@
+services:
+  solana:
+    image: tchambard/solana-test-validator:latest
+    container_name: solana-test-validator
+    command: solana-test-validator --ledger /home/node/.config/solana/.ledger -r --bind-address 0.0.0.0 --rpc-port 8899
+    ports:
+      - "8899:8899"   # RPC
+      - "8900:8900"   # Websocket
+    volumes:
+      - solana-docker:/opt
+      - solana-docker-cache:/home/node/.cache
+      - .:/working_dir
+    working_dir: /working_dir
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfiles/backend.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/backend
+    working_dir: /backend
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfiles/frontend.Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/frontend
+    working_dir: /frontend
+
+volumes:
+  solana-docker:
+  solana-docker-cache:
