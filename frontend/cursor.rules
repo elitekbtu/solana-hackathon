@@ -1,0 +1,74 @@
+    
+### Aegis Engine: Frontend Rules (@frontend)
+
+Этот документ определяет правила и соглашения для фронтенд-приложения на React. Все генерируемые и написанные вручную компоненты и хуки ДОЛЖНЫ соответствовать этим правилам.
+
+---
+
+### 1. Guiding Principles (KISS, DRY, SOLID)
+
+-   **KISS (Keep It Simple, Stupid):** Компоненты должны быть маленькими и сфокусированными. Избегай сложных и вложенных состояний.
+-   **DRY (Don't Repeat Yourself):**
+    -   Выноси повторяющийся UI в переиспользуемые компоненты (`/components/ui`). Например, `Button`, `Card`, `Spinner`.
+    -   Выноси повторяющуюся логику (работа с API, кошельком) в кастомные хуки (`/hooks`).
+-   **SOLID:**
+    -   **S (Single Responsibility):** Компонент либо отображает данные (презентационный), либо управляет состоянием и логикой (контейнер), но не смешивает всё в кучу.
+    -   **I (Interface Segregation):** Передавай в компоненты только те `props`, которые им действительно нужны. Не прокидывай весь объект `player` целиком, если нужен только `player.name`.
+
+---
+
+### 2. MUST HAVE: Core Rules & Conventions
+
+#### **a. Структура Проекта**
+
+  
+
+/src
+├── assets/ # Изображения, SVG, шрифты
+├── components/ # Переиспользуемые React компоненты
+│ ├── ui/ # Базовые UI-элементы (Button, Input)
+│ └── features/ # Сложные компоненты (InventoryGrid, MintForm)
+├── hooks/ # Кастомные хуки (useWalletNFTs, useAegisApi)
+├── services/ # Логика взаимодействия с API бэкенда
+├── context/ # React Context (например, для управления кошельком)
+├── pages/ # Компоненты-страницы
+└── App.tsx # Главный компонент
+code Code
+IGNORE_WHEN_COPYING_START
+IGNORE_WHEN_COPYING_END
+
+    
+#### **b. Управление состоянием (State Management)**
+
+-   Для простого состояния используй `useState`.
+-   Для глобального состояния (информация о подключенном кошельке, баланс) используй **React Context** вместе с `useReducer` или `useState`.
+-   **НЕ ИСПОЛЬЗУЙ Redux.** Это излишняя сложность для данного проекта.
+
+#### **c. Взаимодействие с Solana**
+
+-   **ВСЕГДА** используй библиотеку `@solana/wallet-adapter` для подключения кошельков (Phantom, Solflare).
+-   Всю логику `wallet-adapter` вынеси в отдельный провайдер `WalletContextProvider` в корне приложения (`main.tsx` или `App.tsx`).
+-   Не обращайся к `window.solana` напрямую. Используй хуки из `wallet-adapter` (`useWallet`, `useConnection`).
+
+#### **d. Взаимодействие с Бэкендом**
+
+-   **ВСЕГДА** используй `axios` или `fetch` для HTTP-запросов.
+-   Создай отдельный файл `src/services/api.ts`, который будет содержать все функции для запросов к нашему бэкенду (например, `mintItemAPI`, `getPlayerInventoryAPI`). Компоненты не должны содержать URL эндпоинтов.
+-   Адрес API **ДОЛЖЕН** браться из переменных окружения (`.env`) с префиксом `VITE_` (например, `VITE_API_BASE_URL`).
+
+#### **e. Код и Стилистика**
+
+-   **Язык:** TypeScript (`.tsx` для компонентов). Типизируй `props` и состояния.
+-   **Компоненты:** Только функциональные компоненты с хуками.
+-   **Стилизация:** CSS Modules (`*.module.css`) или Styled Components. Никаких inline-стилей, кроме исключительных случаев.
+-   **Именование:** `PascalCase` для компонентов (`PlayerInventory`), `camelCase` для хуков и переменных (`useWalletNfts`).
+
+---
+
+### 3. Example Prompts for AI
+
+-   **Плохо:** "покажи нфт игрока"
+-   **Хорошо:** "Создай компонент `PlayerInventory.tsx` в `src/components/features`. Он должен использовать хук `useWallet` для получения адреса кошелька. Создай кастомный хук `useWalletNFTs(walletAddress)` который будет делать запрос к бэкенду на `GET /api/v1/players/{walletAddress}/items`. Компонент должен отображать спиннер во время загрузки и сетку из `NFTCard` компонентов после получения данных."
+-   **Хорошо:** "Создай UI компонент `Button.tsx` в `src/components/ui`. Он должен принимать `children`, `onClick`, и опциональный `variant` ('primary' | 'secondary'). Стилизуй его с помощью `Button.module.css`."
+
+  
