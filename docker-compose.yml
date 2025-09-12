@@ -9,6 +9,9 @@ services:
     volumes:
       - solana-docker:/opt
       - solana-docker-cache:/home/node/.cache
+      - ./solana/ledger:/home/node/.config/solana/ledger
+      - ./solana/cache:/home/node/.cache
+      - ./solana/config:/home/node/.config/solana
       - .:/working_dir
     working_dir: /working_dir
   backend:
@@ -23,6 +26,21 @@ services:
       dockerfile: dockerfiles/frontend.Dockerfile
     ports:
       - "80:80"
+  anchor:
+    build:
+      context: .
+      dockerfile: dockerfiles/anchor.Dockerfile
+    container_name: anchor-cli
+    depends_on:
+      - solana
+    volumes:
+      - ./solana/config:/root/.config/solana   # ключи и config.yml
+      - .:/anchor
+    working_dir: /anchor
+    environment:
+      - ANCHOR_WALLET=/root/.config/solana/id.json
+      - ANCHOR_PROVIDER_URL=http://solana:8899
+
 
 volumes:
   solana-docker:
