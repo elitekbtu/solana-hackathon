@@ -35,7 +35,7 @@ services:
       - solana
     volumes:
       - ./solana/config:/root/.config/solana   # ключи и config.yml
-      - .:/anchor
+      - ./anchor:/anchor
     working_dir: /anchor
     environment:
       - ANCHOR_WALLET=/root/.config/solana/id.json
