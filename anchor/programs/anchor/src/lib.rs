@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token::{self, Mint, MintTo, SetAuthority, Token, TokenAccount};
-use spl_token::instruction::AuthorityType;
+use anchor_spl::token::spl_token::instruction::AuthorityType;
 
 declare_id!("DDnZChV4nH945pGZtCtojVq8jztZxFN6VYMeoBKmxE4t");
 
