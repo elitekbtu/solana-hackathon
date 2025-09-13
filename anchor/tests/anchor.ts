@@ -2,6 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Anchor } from "../target/types/anchor";
 import { getAssociatedTokenAddress, getMint, getAccount } from "@solana/spl-token";
+import { expect } from "chai";
 
 describe("anchor", () => {
   // Configure the client to use the local cluster.

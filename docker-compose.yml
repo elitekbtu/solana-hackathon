@@ -1,19 +1,4 @@
 services:
-  solana:
-    image: tchambard/solana-test-validator:latest
-    container_name: solana-test-validator
-    command: solana-test-validator --ledger /home/node/.config/solana/.ledger -r --bind-address 0.0.0.0 --rpc-port 8899
-    ports:
-      - "8899:8899"   # RPC
-      - "8900:8900"   # Websocket
-    volumes:
-      - solana-docker:/opt
-      - solana-docker-cache:/home/node/.cache
-      - ./solana/ledger:/home/node/.config/solana/ledger
-      - ./solana/cache:/home/node/.cache
-      - ./solana/config:/home/node/.config/solana
-      - .:/working_dir
-    working_dir: /working_dir
   backend:
     build:
       context: .
@@ -31,15 +16,13 @@ services:
       context: .
       dockerfile: dockerfiles/anchor.Dockerfile
     container_name: anchor-cli
-    depends_on:
-      - solana
     volumes:
       - ./solana/config:/root/.config/solana   # ключи и config.yml
       - ./anchor:/anchor
     working_dir: /anchor
     environment:
       - ANCHOR_WALLET=/root/.config/solana/id.json
-      - ANCHOR_PROVIDER_URL=http://solana:8899
+      - ANCHOR_PROVIDER_URL=https://api.devnet.solana.com
 
 volumes:
   solana-docker:
