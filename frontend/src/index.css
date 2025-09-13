@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,36 +6,155 @@
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-primary-200;
   }
   
   body {
-    @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen font-sans;
+    @apply bg-gradient-to-br from-white via-primary-50 to-primary-100 min-h-screen font-sans text-primary-900 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   
   html {
     scroll-behavior: smooth;
   }
+
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-primary-100 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-400 rounded-full hover:bg-primary-500 transition-colors;
+  }
 }
 
 @layer components {
+  /* Apple-style glass morphism */
+  .glass {
+    backdrop-filter: blur(20px);
+    @apply bg-white/80 border border-white/20 shadow-glass;
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(20px);
+    @apply bg-black/80 border border-white/10 shadow-glass;
+  }
+
+  /* Enhanced gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-900 via-primary-700 to-primary-600 bg-clip-text text-transparent font-bold;
+    background-size: 200% 200%;
+    animation: gradientXY 3s ease infinite;
+  }
+
+  .gradient-text-accent {
+    @apply bg-gradient-to-r from-accent-600 via-accent-500 to-accent-400 bg-clip-text text-transparent font-bold;
+    background-size: 200% 200%;
+    animation: gradientXY 3s ease infinite;
+  }
+
+  /* Apple-style buttons */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-black hover:bg-primary-800 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-elegant hover:shadow-xl active:scale-95 hover:-translate-y-0.5;
   }
   
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-white hover:bg-primary-50 text-primary-900 font-semibold py-3 px-6 rounded-xl border border-primary-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-soft hover:shadow-elegant hover:-translate-y-0.5 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-primary-100 text-primary-700 font-medium py-2 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95;
   }
   
+  /* Enhanced cards */
   .card {
-    @apply bg-white rounded-xl shadow-lg border border-gray-200 p-6;
+    @apply bg-white rounded-2xl shadow-soft border border-primary-200 p-6 hover:shadow-elegant transition-all duration-300 hover:-translate-y-1;
+  }
+
+  .card-glass {
+    @apply glass rounded-2xl p-6 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1;
   }
   
+  /* Modern input fields */
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200;
+    @apply w-full px-4 py-3 border border-primary-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-300 bg-white shadow-soft hover:shadow-md focus:shadow-lg placeholder:text-primary-400;
   }
-  
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent;
+
+  /* Floating labels */
+  .floating-input {
+    @apply relative;
+  }
+
+  .floating-input input:focus + label,
+  .floating-input input:not(:placeholder-shown) + label {
+    @apply transform -translate-y-6 scale-75 text-primary-600;
+  }
+
+  .floating-input label {
+    @apply absolute left-4 top-3 text-primary-500 transition-all duration-200 pointer-events-none origin-left;
+  }
+
+  /* Apple-style hero sections */
+  .hero-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%);
+  }
+
+  .hero-gradient-dark {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #374151 100%);
+  }
+
+  /* Loading animations */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-primary-200 border-t-primary-900;
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 2s infinite;
+  }
+}
+
+@layer utilities {
+  /* Text effects */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Apple-style blur effects */
+  .backdrop-blur-apple {
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Smooth animations */
+  .animate-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
   }
 }

@@ -1,164 +1,203 @@
-import { Zap, ArrowRight } from 'lucide-react'
+import { Zap, Users, Rocket, Gamepad2, Heart } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Link } from 'react-router-dom'
+import { AnimatedTooltipDemo } from '@/components/demos/animated-tooltip-demo'
+import { MarqueeDemo } from '@/components/demos/marquee-demo'
+import { FooterDemo } from '@/components/demos/footer-demo'
 
-const teamMembers = [
-  {
-    name: "Alibek Anuarbek",
-    role: "Product Manager",
-    description: "Product manager for the Butaq NFT Studio. Responsible for the overall product strategy and vision."
-  },
-  {
-    name: "Ualikhanuly Beknur",
-    role: "Backend Developer",
-    description: "Creating beautiful and intuitive user interfaces that make NFT creation accessible to everyone in the gaming community."
-  },
-  {
-    name: "Yermakhan Sultan",
-    role: "Backend Developer",
-    description: "Building robust backend services and APIs that power our NFT minting platform with seamless transaction processing."
-  },
-  {
-    name: "Satbaldiyev Turarbek",
-    role: "Full-Stack Developer",
-    description: "Leading the development of our Solana-based NFT minting platform with expertise in blockchain technology and smart contracts. End-to-end development."
-  }
-]
-
-const teamPhotos = [
-  "/team/team.jpg",
-  "/team/team2.jpg", 
-  "/team/team3.jpg"
-]
 
 const features = [
   {
     title: "Gaming NFTs",
-    description: "Create NFTs from gaming assets and achievements."
+    description: "Create NFTs from gaming assets and achievements with seamless integration.",
+    icon: Gamepad2,
+    color: "from-purple-500 to-purple-600"
   },
   {
     title: "Easy Upload",
-    description: "Simple interface for uploading gaming images."
+    description: "Intuitive drag-and-drop interface for uploading gaming images and assets.",
+    icon: Rocket,
+    color: "from-accent-500 to-accent-600"
   },
   {
     title: "Fast Transactions",
-    description: "Quick NFT minting powered by Solana."
+    description: "Lightning-fast NFT minting powered by Solana's high-performance blockchain.",
+    icon: Zap,
+    color: "from-green-500 to-green-600"
   }
 ]
 
+
 export default function About() {
   return (
-    <div className="min-h-screen bg-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen"
+    >
       {/* Hero Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h1 className="text-5xl font-bold text-blue-900 mb-6">
-            Butaq Team
-          </h1>
-          <p className="text-xl text-blue-700 max-w-3xl mx-auto">
-            Creating NFT solutions for the gaming industry
-          </p>
+      <motion.section 
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
+        className="py-24 hero-gradient relative overflow-hidden"
+      >
+        {/* Animated background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{ 
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute top-16 right-16 w-40 h-40 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-2xl"
+          />
         </div>
-      </section>
 
-      {/* Solution Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-blue-900 text-center mb-12">
-            Our Solution
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center p-6 border border-blue-200 rounded-lg">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">{feature.title}</h3>
-                <p className="text-blue-700">{feature.description}</p>
-              </div>
-            ))}
-          </div>
+        <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mb-8"
+          >
+            <div className="inline-flex items-center space-x-2 bg-black/5 backdrop-blur-sm rounded-full px-6 py-3 border border-primary-200/50 mb-8">
+              <Users className="h-4 w-4 text-accent-600" />
+              <span className="text-sm font-medium text-primary-800">Meet the Team</span>
+            </div>
+          </motion.div>
+
+          <motion.h1 
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-6xl sm:text-7xl font-bold text-primary-900 mb-6 tracking-tight"
+          >
+            <span className="gradient-text">Butaq</span> Team
+          </motion.h1>
+
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="text-xl text-primary-700 max-w-3xl mx-auto mb-10 leading-relaxed"
+          >
+            Passionate developers and innovators creating the future of gaming NFTs. 
+            We're building tomorrow's digital asset platform today.
+          </motion.p>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <Button asChild size="lg" className="px-8 py-4 text-lg shadow-elegant">
+              <Link to="/">
+                <Rocket className="h-5 w-5 mr-2" />
+                Start Building
+              </Link>
+            </Button>
+            <Button variant="secondary" size="lg" className="px-8 py-4 text-lg">
+              <Heart className="h-5 w-5 mr-2" />
+              Our Mission
+            </Button>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Team Photos Section */}
-      <section className="py-16 bg-blue-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-blue-900 text-center mb-12">
-            Our Team
-          </h2>
+      {/* Features Section */}
+      <section className="py-20 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-primary-900 mb-4">
+              Our <span className="gradient-text">Solution</span>
+            </h2>
+            <p className="text-xl text-primary-700 max-w-3xl mx-auto">
+              Revolutionary tools that make NFT creation simple, fast, and accessible for gamers everywhere.
+            </p>
+          </motion.div>
           
-          {/* Team Photos Gallery */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {teamPhotos.map((photo, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg border border-blue-200">
-                <img 
-                  src={photo} 
-                  alt={`Team Photo ${index + 1}`}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ y: 50, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Card className="text-center h-full group hover:shadow-elegant transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+                    <CardHeader>
+                      <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                        <Icon className="h-8 w-8 text-white" />
+                      </div>
+                      <CardTitle className="text-xl text-primary-900">{feature.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-primary-600 leading-relaxed">
+                        {feature.description}
+                      </CardDescription>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )
+            })}
           </div>
+        </div>
+      </section>
 
-          {/* Team Members List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {teamMembers.map((member, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg border border-blue-200">
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">{member.name}</h3>
-                <p className="text-blue-600 mb-3 font-medium">{member.role}</p>
-                <p className="text-sm text-blue-700">{member.description}</p>
-              </div>
-            ))}
-          </div>
+      {/* Team Section */}
+      <section className="py-20 bg-gradient-to-br from-primary-50 to-accent-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <AnimatedTooltipDemo />
+          </motion.div>
         </div>
       </section>
 
       {/* Technology Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-blue-900 text-center mb-12">
-            Technology
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              "React", "TypeScript", "Solana", "Node.js",
-              "Anchor", "Tailwind", "Vite", "Rust"
-            ].map((tech, index) => (
-              <div key={index} className="text-center p-4 border border-blue-200 rounded-lg">
-                <span className="text-blue-900 font-medium">{tech}</span>
-              </div>
-            ))}
-          </div>
+      <section className="py-20 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <MarqueeDemo />
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-blue-900 text-white">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-6">
-            Ready to Create Gaming NFTs?
-          </h2>
-          <p className="text-xl mb-8 text-blue-100">
-            Start creating and trading your digital gaming assets today.
-          </p>
-          <a 
-            href="/" 
-            className="inline-flex items-center px-8 py-3 bg-white text-blue-900 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            Start Minting
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </a>
-        </div>
-      </section>
+
 
       {/* Footer */}
-      <footer className="bg-blue-900 text-white py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Zap className="h-6 w-6" />
-            <span className="text-xl font-bold">Butaq Team</span>
-          </div>
-          <p className="text-blue-200">
-            © 2025 Butaq Team. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <FooterDemo />
+    </motion.div>
   )
 }
