@@ -24,7 +24,6 @@ COPY --from=builder /frontend/dist /usr/share/nginx/html
 # Fix permissions for nginx
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chmod -R 755 /usr/share/nginx/html
-
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
