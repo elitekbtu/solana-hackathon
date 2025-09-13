@@ -65,7 +65,7 @@ export default function Gallery() {
           >
             <div className="relative group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-soft hover:shadow-elegant transition-all duration-500">
               <img 
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80"
+                src="/team/team.jpg"
                 alt="Team Working"
                 className="w-full h-96 lg:h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -94,24 +94,19 @@ export default function Gallery() {
           {/* Side Images */}
           {[
             {
-              src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
+              src: "/team/team2.jpg",
               title: "Team Meeting",
               description: "Planning the roadmap"
             },
             {
-              src: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
+              src: "/team/team3.jpg",
               title: "Code Review",
               description: "Reviewing smart contracts"
             },
             {
-              src: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
-              title: "UI Design",
+              src: "/beknur.jpg",
+              title: "Frontend Developer",
               description: "Crafting user experience"
-            },
-            {
-              src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
-              title: "Testing Phase",
-              description: "Quality assurance"
             }
           ].map((image, index) => (
             <motion.div

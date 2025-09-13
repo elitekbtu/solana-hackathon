@@ -5,25 +5,25 @@ const teamMembers = [
     id: 1,
     name: "Alibek Anuarbek",
     designation: "Product Manager",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    image: "/alibek.jpg",
   },
   {
     id: 2,
     name: "Ualikhanuly Beknur", 
     designation: "Frontend Developer",
-    image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
+    image: "/beknur.jpg",
   },
   {
     id: 3,
     name: "Yermakhan Sultan",
     designation: "Backend Developer", 
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    image: "/sultan.jpg",
   },
   {
     id: 4,
     name: "Satbaldiyev Turarbek",
     designation: "Full-Stack Developer",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    image: "/turarbek.png",
   },
 ];
 
