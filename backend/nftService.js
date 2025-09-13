@@ -107,11 +107,36 @@ class NFTService {
     }
   }
 
+  async waitForBalance(minimumBalance = 0.1) {
+    const maxWaitTime = 60000; // 60 seconds
+    const checkInterval = 2000; // 2 seconds
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < maxWaitTime) {
+      try {
+        const balance = await this.getWalletBalance();
+        if (balance >= minimumBalance) {
+          console.log(`Balance sufficient: ${balance} SOL`);
+          return true;
+        }
+        console.log(`Waiting for balance... Current: ${balance} SOL, Required: ${minimumBalance} SOL`);
+        await new Promise(resolve => setTimeout(resolve, checkInterval));
+      } catch (error) {
+        console.error('Error checking balance:', error.message);
+        await new Promise(resolve => setTimeout(resolve, checkInterval));
+      }
+    }
+    
+    throw new Error(`Timeout waiting for balance. Current balance: ${await this.getWalletBalance()} SOL`);
+  }
+
   async requestAirdropAlternative(amount = 2) {
     const alternativeMethods = [
       () => this.requestAirdropFromQuickNode(amount),
       () => this.requestAirdropFromHelius(amount),
-      () => this.requestAirdropFromWebFaucet(amount)
+      () => this.requestAirdropFromWebFaucet(amount),
+      () => this.requestAirdropFromSolFaucet(amount),
+      () => this.requestAirdropFromTestnetFaucet(amount)
     ];
 
     for (const method of alternativeMethods) {
@@ -128,7 +153,18 @@ class NFTService {
       }
     }
     
-    throw new Error('All airdrop methods failed. Please try manually using https://faucet.solana.com/');
+    // Provide detailed manual instructions
+    const walletAddress = this.wallet.publicKey.toString();
+    throw new Error(`All airdrop methods failed. Please try manually:
+    
+Manual Solutions:
+1. Visit https://faucet.solana.com/ and enter: ${walletAddress}
+2. Visit https://solfaucet.com/ and enter: ${walletAddress}
+3. Visit https://faucet.quicknode.com/solana/devnet
+4. Visit https://www.testnetfaucet.org/
+5. Wait 24 hours for rate limits to reset
+
+Your wallet address: ${walletAddress}`);
   }
 
   async requestAirdropFromQuickNode(amount = 2) {
@@ -192,6 +228,55 @@ class NFTService {
     }
   }
 
+  async requestAirdropFromSolFaucet(amount = 2) {
+    try {
+      // Try SolFaucet.com API
+      const response = await axios.post('https://solfaucet.com/api/request', {
+        address: this.wallet.publicKey.toString(),
+        amount: amount
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data.error) {
+        throw new Error(response.data.error.message);
+      }
+
+      const signature = response.data.signature;
+      await this.connection.confirmTransaction(signature);
+      return signature;
+    } catch (error) {
+      throw new Error(`SolFaucet airdrop failed: ${error.message}`);
+    }
+  }
+
+  async requestAirdropFromTestnetFaucet(amount = 2) {
+    try {
+      // Try testnetfaucet.org API
+      const response = await axios.post('https://www.testnetfaucet.org/api/request', {
+        address: this.wallet.publicKey.toString(),
+        amount: amount,
+        network: 'solana-devnet'
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data.error) {
+        throw new Error(response.data.error.message);
+      }
+
+      const signature = response.data.signature;
+      await this.connection.confirmTransaction(signature);
+      return signature;
+    } catch (error) {
+      throw new Error(`TestnetFaucet airdrop failed: ${error.message}`);
+    }
+  }
+
   async mintNFT(imagePath, metadata) {
     try {
       if (!this.program) {
@@ -202,22 +287,17 @@ class NFTService {
       const mintKeypair = Keypair.generate();
       const mintAddress = mintKeypair.publicKey;
 
+      console.log('Minting NFT with mint address:', mintAddress.toString());
+
       // Get the associated token account address
       const associatedTokenAccount = await getAssociatedTokenAddress(
         mintAddress,
         this.wallet.publicKey
       );
 
-      // Check if the associated token account exists
-      let associatedTokenAccountInfo;
-      try {
-        associatedTokenAccountInfo = await getAccount(this.connection, associatedTokenAccount);
-      } catch (error) {
-        // Account doesn't exist, we'll create it in the transaction
-        associatedTokenAccountInfo = null;
-      }
+      console.log('Associated token account:', associatedTokenAccount.toString());
 
-      // Create the mint NFT instruction
+      // Create the mint NFT instruction using Anchor
       const mintNftIx = await this.program.methods
         .mintNft()
         .accounts({
@@ -234,18 +314,7 @@ class NFTService {
       // Create transaction
       const transaction = new Transaction();
 
-      // Add instruction to create associated token account if it doesn't exist
-      if (!associatedTokenAccountInfo) {
-        const createATAInstruction = createAssociatedTokenAccountInstruction(
-          this.wallet.publicKey, // payer
-          associatedTokenAccount, // associated token account
-          this.wallet.publicKey, // owner
-          mintAddress // mint
-        );
-        transaction.add(createATAInstruction);
-      }
-
-      // Add the mint NFT instruction
+      // Add the mint NFT instruction (this will create both mint and ATA)
       transaction.add(mintNftIx);
 
       // Set recent blockhash
@@ -256,14 +325,22 @@ class NFTService {
       // Sign the transaction
       transaction.sign(this.wallet, mintKeypair);
 
+      console.log('Sending transaction...');
+
       // Send the transaction
       const signature = await this.connection.sendTransaction(transaction, [
         this.wallet,
         mintKeypair
       ]);
 
+      console.log('Transaction sent, signature:', signature);
+
       // Wait for confirmation
-      await this.connection.confirmTransaction(signature);
+      const confirmation = await this.connection.confirmTransaction(signature);
+      
+      if (confirmation.value.err) {
+        throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+      }
 
       console.log('NFT minted successfully:', {
         mintAddress: mintAddress.toString(),

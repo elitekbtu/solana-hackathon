@@ -169,16 +169,21 @@ app.post('/mint-nft', upload.single('image'), async (req, res) => {
       try {
         await nftService.requestAirdrop(2);
         console.log('Airdrop successful');
+        
+        // Wait for balance to be available
+        await nftService.waitForBalance(0.1);
+        console.log('Balance confirmed');
       } catch (airdropError) {
         console.error('Airdrop failed:', airdropError.message);
         
         // If airdrop fails due to rate limits, provide helpful error message
         if (airdropError.message.includes('429') || 
             airdropError.message.includes('rate limit') || 
-            airdropError.message.includes('Too Many Requests')) {
+            airdropError.message.includes('Too Many Requests') ||
+            airdropError.message.includes('All airdrop methods failed')) {
           return res.status(429).json({
             success: false,
-            error: 'Airdrop rate limit exceeded',
+            error: 'Airdrop failed - all methods exhausted',
             details: airdropError.message,
             solutions: [
               'Wait 24 hours for rate limit to reset',
@@ -186,7 +191,8 @@ app.post('/mint-nft', upload.single('image'), async (req, res) => {
               'Try a different RPC provider (Helius, QuickNode)',
               'Use localnet for testing: solana-test-validator'
             ],
-            walletAddress: nftService.wallet.publicKey.toString()
+            walletAddress: nftService.wallet.publicKey.toString(),
+            manualInstructions: airdropError.message
           });
         }
         
