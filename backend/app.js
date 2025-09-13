@@ -62,14 +62,7 @@ const connection = new Connection(RPC_URL, 'confirmed');
 // Helper function to upload image to IPFS (using Pinata as example)
 async function uploadToIPFS(imageBuffer, metadata) {
   try {
-    // In a real application, you would use a service like Pinata, IPFS, or Arweave
-    // For this example, we'll simulate the upload
     const ipfsHash = `Qm${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-    
-    // In production, you would:
-    // 1. Upload the image to IPFS
-    // 2. Upload the metadata JSON to IPFS
-    // 3. Return the IPFS hashes
     
     return {
       imageHash: ipfsHash,

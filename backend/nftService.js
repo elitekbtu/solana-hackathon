@@ -317,30 +317,16 @@ Your wallet address: ${walletAddress}`);
       // Add the mint NFT instruction (this will create both mint and ATA)
       transaction.add(mintNftIx);
 
-      // Set recent blockhash
-      const { blockhash } = await this.connection.getLatestBlockhash();
-      transaction.recentBlockhash = blockhash;
-      transaction.feePayer = this.wallet.publicKey;
-
-      // Sign the transaction
-      transaction.sign(this.wallet, mintKeypair);
-
       console.log('Sending transaction...');
 
-      // Send the transaction
-      const signature = await this.connection.sendTransaction(transaction, [
-        this.wallet,
-        mintKeypair
-      ]);
+      // Send and confirm the transaction
+      const signature = await anchor.web3.sendAndConfirmTransaction(
+        this.connection,
+        transaction,
+        [this.wallet, mintKeypair]
+      );
 
-      console.log('Transaction sent, signature:', signature);
-
-      // Wait for confirmation
-      const confirmation = await this.connection.confirmTransaction(signature);
-      
-      if (confirmation.value.err) {
-        throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
-      }
+      console.log('Transaction confirmed, signature:', signature);
 
       console.log('NFT minted successfully:', {
         mintAddress: mintAddress.toString(),

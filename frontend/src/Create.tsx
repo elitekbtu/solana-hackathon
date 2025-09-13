@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Wallet, CheckCircle, AlertCircle, Sparkles, Zap, Plus, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -21,6 +21,7 @@ interface MintResult {
     mintAddress: string
     signature: string
     associatedTokenAccount: string
+    explorerUrl: string
   }
   error?: string
   details?: string
@@ -60,17 +61,21 @@ export default function Create() {
 
   const checkWalletBalance = async () => {
     try {
-      const response = await fetch('/api/wallet/balance')
+      const response = await fetch('http://localhost:3000/wallet/balance')
       const data = await response.json()
       
       if (data.success) {
-        setWalletBalance(data.balance)
-        setWalletAddress(data.walletAddress)
+        setWalletBalance(data.data.balance)
+        setWalletAddress(data.data.address)
       }
     } catch (error) {
       console.error('Error checking wallet balance:', error)
     }
   }
+
+  useEffect(() => {
+    checkWalletBalance()
+  }, [])
 
   const addAttribute = () => {
     setNftData(prev => ({
@@ -106,12 +111,12 @@ export default function Create() {
 
     try {
       const formData = new FormData()
-      formData.append('file', selectedFile)
+      formData.append('image', selectedFile)
       formData.append('name', nftData.name)
       formData.append('description', nftData.description)
       formData.append('attributes', JSON.stringify(nftData.attributes.filter(attr => attr.trait_type && attr.value)))
 
-      const response = await fetch('/api/mint-nft', {
+      const response = await fetch('http://localhost:3000/mint-nft', {
         method: 'POST',
         body: formData
       })
@@ -376,7 +381,7 @@ export default function Create() {
                       </div>
                       <div className="bg-white/80 rounded-xl p-4 border border-green-200">
                         <p className="text-sm font-medium text-green-800 mb-1">Transaction:</p>
-                        <p className="font-mono text-sm text-green-700 break-all">{mintResult.data.signature}</p>
+                        <a href={mintResult.data.explorerUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-green-700 break-all hover:underline">{mintResult.data.signature}</a>
                       </div>
                       <div className="bg-white/80 rounded-xl p-4 border border-green-200">
                         <p className="text-sm font-medium text-green-800 mb-1">Token Account:</p>
